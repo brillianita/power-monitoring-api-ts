@@ -3,6 +3,7 @@ import mqtt from "mqtt";
 import { URL_MQTT } from "@/libs/utils";
 import { Point } from "@influxdata/influxdb-client";
 import { injectable } from "inversify";
+// import { AppError } from "@/libs/exceptions/app-error";
 
 @injectable()
 export class Mqtt {
@@ -39,9 +40,20 @@ export class Mqtt {
         .timestamp(new Date())
         .floatField("voltage", data.data.voltage.voltRN)
         .floatField("current", data.data.current.currentR);
-
+      // findById: async () => {
+      //   if(!validatedReq.success) {
+      //     throw new AppError({
+      //       statusCode: HttpCode.VALIDATION_ERROR,
+      //       data: validatedReq.error.flatten().fieldErrirs,
+      //     });
+      //   }
+      // }
       await writeApi.writePoint(point);
+
+      
       console.log("Data successfully written to InfluxDB");
+
+
     } catch (error) {
       console.error("Failed to write data to InfluxDB:", error);
     }

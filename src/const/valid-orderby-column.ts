@@ -4,6 +4,11 @@ export const VALID_ORDERBY_COLUMN = {
   ROLE: ["name"],
 
   // Apps entity
+  DEVICE_PARENT: ["name"],
+  PARAMETER_KWH: ["year"], 
+  PARAMETER_COST:["year"],
+  POWER_CONSUMPTION: ["year"],
+  LOG_ALERTS: ["location", "category", "priority"],
   DEVICE: ["macAddress", "name", "isMain"],
   CARBON_COEFFICIENT_LOG: ["changedAt"],
   DEVICE_LIMITATION: ["macAddress", "name"],

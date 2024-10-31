@@ -15,6 +15,9 @@ const TYPES = {
   MenuPermissionRuleRepository: Symbol.for("MenuPermissionRuleRepository"),
   RoleAccessRepository: Symbol.for("RoleAccessRepository"),
 
+  // Power Monitoring Management Domain Service
+  DeviceParentRepository: Symbol.for("DeviceParentRepository"),
+
   // Service Layer
   // User Management Service
   UserService: Symbol.for("UserService"),
@@ -22,6 +25,9 @@ const TYPES = {
   MenuService: Symbol.for("MenuService"),
   WebadminAuthService: Symbol.for("WebadminAuthService"),
   RoleService: Symbol.for("RoleService"),
+
+  // Power Monitoring Management Service 
+  DeviceParentService: Symbol.for("DeviceParentService"),
 
   ManagedTransactionService: Symbol.for("ManagedTransactionService"),
   SeederService: Symbol.for("SeederService"),

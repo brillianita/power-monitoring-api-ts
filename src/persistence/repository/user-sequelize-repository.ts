@@ -58,12 +58,12 @@ export class UserSequelizeRepository implements UserRepository {
     orderBy && validateOrderByColumn(orderBy, VALID_ORDERBY_COLUMN.USER);
     const order: Order = [];
     switch (orderBy) {
-      case "role":
-        order.push([{ model: RolePersistence, as: "role" }, "name", sortBy!]);
-        break;
-      default:
-        if (orderBy) order.push([orderBy, sortBy!]);
-        break;
+    case "role":
+      order.push([{ model: RolePersistence, as: "role" }, "name", sortBy!]);
+      break;
+    default:
+      if (orderBy) order.push([orderBy, sortBy!]);
+      break;
     }
     const { rows: data, count } = await UserPersistence.findAndCountAll({
       include: [{ model: RolePersistence, as: "role" }],

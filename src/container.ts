@@ -10,6 +10,7 @@ import { PermissionRoutes } from "@/presentation/routes/web-admin/permission-rou
 import { MenuRoutes } from "@/presentation/routes/web-admin/menu-routes";
 import { RoleRoutes } from "@/presentation/routes/web-admin/role-routes";
 import { SeederRoutes } from "@/presentation/routes/web-admin/seeder-routes";
+import { DeviceParentRoutes } from "./presentation/routes/power-monitoring/device-parent-route";
 
 //Publisher / Socket
 import { TimePublisher } from "@/presentation/socket/publisher/time-publisher";
@@ -24,6 +25,7 @@ import { MenuRepository } from "@/domain/service/user-management/menu-repository
 import { RoleRepository } from "@/domain/service/user-management/role-repository";
 import { MenuPermissionRuleRepository } from "@/domain/service/user-management/menu-permission-rule-repository";
 import { RoleAccessRepository } from "@/domain/service/user-management/role-access-repository";
+import { DeviceParentRepository } from "./domain/service/power-monitoring/device-parent";
 
 // Domain Repository / Infrastructur implementation
 import { UserSequelizeRepository } from "@/persistence/repository/user-sequelize-repository";
@@ -32,6 +34,7 @@ import { MenuSequelizeRepository } from "@/persistence/repository/menu-sequelize
 import { RoleSequelizeRepository } from "@/persistence/repository/role-sequelize-repository";
 import { MenuPermissionRuleSequelizeRepository } from "@/persistence/repository/menu-permission-rule-sequelize-repository";
 import RoleAccessSequelizeRepository from "@/persistence/repository/role-access-sequelize-repository";
+import { DeviceParentSequelizeRepository } from "./persistence/repository/power-monitoring/device-parent-sequelize";
 
 // Service Implementation
 import { UserService } from "@/services/web-admin/user-service";
@@ -41,12 +44,14 @@ import { MenuService } from "@/services/web-admin/menu-service";
 import { RoleService } from "@/services/web-admin/role-service";
 import ManagedTransactionService from "@/services/managed-transaction-service";
 import { SeederService } from "@/services/web-admin/seeder-service";
+import { DeviceParentService } from "./services/power-monitoring/device-parent-service";
 
 // Controller
 import UserController from "@/presentation/controllers/web-admin/user-controller";
 import { WebadminAuthController } from "./presentation/controllers/web-admin/auth-controller";
 import PermissionController from "@/presentation/controllers/web-admin/permission-controller";
 import { SeederController } from "@/presentation/controllers/web-admin/seeder-controller";
+import DeviceParentController  from "@/presentation/controllers/power-monitoring/device-parent-controller";
 
 //Cron Job
 import { ExampleCron } from "@/presentation/cron/example-cron";
@@ -81,6 +86,7 @@ container.bind(PermissionRoutes).toSelf().inSingletonScope();
 container.bind(MenuRoutes).toSelf().inSingletonScope();
 container.bind(RoleRoutes).toSelf().inSingletonScope();
 container.bind(SeederRoutes).toSelf().inSingletonScope();
+container.bind(DeviceParentRoutes).toSelf().inRequestScope();
 
 //Publisher
 container.bind<TimePublisher>(TimePublisher).toSelf().inSingletonScope();
@@ -96,6 +102,7 @@ container.bind(TYPES.MenuService).to(MenuService);
 container.bind(TYPES.RoleService).to(RoleService);
 container.bind(TYPES.ManagedTransactionService).to(ManagedTransactionService);
 container.bind(TYPES.SeederService).to(SeederService);
+container.bind(TYPES.DeviceParentService).to(DeviceParentService);
 
 // Web Admin Service
 container.bind(TYPES.WebadminAuthService).to(WebadminAuthService);
@@ -107,6 +114,7 @@ container.bind(PermissionController).toSelf();
 container.bind(MenuController).toSelf();
 container.bind(RoleController).toSelf();
 container.bind(SeederController).toSelf();
+container.bind(DeviceParentController).toSelf();
 
 //CRON
 container.bind(ExampleCron).toSelf().inSingletonScope();
@@ -137,5 +145,7 @@ container
 container
   .bind<RoleAccessRepository>(TYPES.RoleAccessRepository)
   .to(RoleAccessSequelizeRepository);
-
+container
+  .bind<DeviceParentRepository>(TYPES.DeviceParentRepository)
+  .to(DeviceParentSequelizeRepository);
 export { container };
