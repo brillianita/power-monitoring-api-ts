@@ -47,7 +47,9 @@ export class ParameterKwh extends Entity<IParameterKwh> {
       id: this._id,
     };
   }
-
+  get id(): string {
+    return this._id;
+  }
   // Define rounding utility
   private round(value: number, precision: number): number {
     const factor = Math.pow(10, precision);

@@ -1,12 +1,16 @@
 import { Entity, IBaseDomainProperty } from "../entity";
 
+export enum EStatus {
+  active = "active",
+  inactive = "inactive"
+} 
 export interface IDevice extends IBaseDomainProperty {
-  parentId: string;
   name: string;
+  location: string;
   macAddress: string;
-  status: string;
-  maxAmpere: number;
-  stdAmpere: number;
+  status: string | EStatus;
+  maxAmpere?: number | undefined;
+  stdAmpere?: number | undefined;
 }
 
 export class Device extends Entity<IDevice> {
@@ -22,8 +26,8 @@ export class Device extends Entity<IDevice> {
   public unmarshal(): IDevice{
     return {
       id: this._id,
-      parentId: this.parentId,
       name: this.name,
+      location: this.location,
       macAddress: this.macAddress,
       status: this.status,
       maxAmpere: this.maxAmpere,
@@ -38,8 +42,8 @@ export class Device extends Entity<IDevice> {
     return this._id;
   }
 
-  get parentId(): string {
-    return this.props.parentId;
+  get location(): string {
+    return this.props.location;
   }
 
   get name(): string {
@@ -50,15 +54,15 @@ export class Device extends Entity<IDevice> {
     return this.props.macAddress;
   }
 
-  get status(): string {
+  get status(): string | EStatus {
     return this.props.status;
   }
 
-  get maxAmpere(): number {
+  get maxAmpere(): number | undefined {
     return this.props.maxAmpere;
   }
 
-  get stdAmpere(): number {
+  get stdAmpere(): number | undefined {
     return this.props.stdAmpere;
   }
 

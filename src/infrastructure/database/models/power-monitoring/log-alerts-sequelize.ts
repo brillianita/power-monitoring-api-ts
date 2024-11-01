@@ -1,9 +1,9 @@
-import { ILogAlerts } from "@/domain/models/power-monitoring/log-alerts";
+import { ILogAlert } from "@/domain/models/power-monitoring/log-alert";
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { Device } from "./device-sequelize";
 import { sequelize } from "../../sequelize";
 
-export class LogAlerts extends Model<InferAttributes<LogAlerts>, InferCreationAttributes<LogAlerts>> implements ILogAlerts {
+export class LogAlerts extends Model<InferAttributes<LogAlerts>, InferCreationAttributes<LogAlerts>> implements ILogAlert {
   declare id: CreationOptional<string>;
   declare deviceId: string;
   declare location: string;
@@ -54,7 +54,7 @@ LogAlerts.init({
 }, {
   sequelize,
   tableName: "log_alerts",
-  modelName: "logAlerts",
+  modelName: "logAlert",
   underscored: true,
   paranoid: true
 });

@@ -241,7 +241,7 @@ Limitation.init({
   deletedAt: DataTypes.DATE,
 }, {
   sequelize,
-  tableName: "limitation",
+  tableName: "limitations",
   modelName: "limitation",
   paranoid: true,
 });

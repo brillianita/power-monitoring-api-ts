@@ -9,7 +9,7 @@ export const VALID_ORDERBY_COLUMN = {
   PARAMETER_COST:["year"],
   POWER_CONSUMPTION: ["year"],
   LOG_ALERTS: ["location", "category", "priority"],
-  DEVICE: ["macAddress", "name", "isMain"],
+  DEVICE: ["macAddress", "name", "location", "maxAmpere", "stdAmpere", "status"],
   CARBON_COEFFICIENT_LOG: ["changedAt"],
   DEVICE_LIMITATION: ["macAddress", "name"],
   FISCAL_YEAR: ["year", "startDate", "endDate", "totalBudget"],

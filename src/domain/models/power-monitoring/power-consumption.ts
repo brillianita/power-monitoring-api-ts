@@ -46,6 +46,10 @@ export class PowerConsumption extends Entity<IPowerConsumption> {
     };
   }
 
+  get id(): string {
+    return this._id;
+  }
+  
   get deviceId(): string {
     return this.props.deviceId;
   }

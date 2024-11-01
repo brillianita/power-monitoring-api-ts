@@ -134,7 +134,7 @@ PowerConsumption.init({
   deletedAt: DataTypes.DATE,
 }, {
   sequelize,
-  tableName: "power_consumption",
+  tableName: "power_consumptions",
   modelName: "powerConsumption",
   underscored: true,
   paranoid: true

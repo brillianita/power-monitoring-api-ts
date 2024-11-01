@@ -1,9 +1,9 @@
-import { DeviceParentRepository } from "@/domain/service/power-monitoring/device-parent";
+import { DeviceRepository } from "@/domain/service/power-monitoring/device";
 import { inject, injectable } from "inversify";
 import ManagedTransactionService from "../managed-transaction-service";
 import { TYPES } from "@/types";
 import { TStandardPaginationOption } from "@/domain/service/types";
-import { DeviceParent, IDeviceParent } from "@/domain/models/power-monitoring/device-parents";
+import { Device, IDevice } from "@/domain/models/power-monitoring/device";
 import { CacheHandler } from "@/libs/cache-handler";
 import { container } from "@/container";
 import { Transaction } from "sequelize";
@@ -11,29 +11,32 @@ import { Pagination } from "@/domain/models/pagination";
 import { AppError, HttpCode } from "@/libs/exceptions/app-error";
 
 @injectable()
-export class DeviceParentService {
+export class DeviceService {
   private cacheInstance = container.get<CacheHandler>(CacheHandler);
   constructor(
-    @inject(TYPES.DeviceParentRepository) private _deviceParentRepository: DeviceParentRepository,
+    @inject(TYPES.DeviceRepository) private _deviceRepository: DeviceRepository,
     @inject(TYPES.ManagedTransactionService)
     private _serviceTransaction: ManagedTransactionService
   ) { }
 
-  public async store(_deviceParent: IDeviceParent, t?: Transaction): Promise<IDeviceParent> {
-    const deviceParentData = DeviceParent.create({
-      ..._deviceParent
+  public async store(_device: IDevice, t?: Transaction): Promise<IDevice> {
+    console.log("req.body service", {..._device});
+    
+    const deviceData = Device.create({
+      ..._device
     });
 
-    const deviceParent = await this._deviceParentRepository.create(
-      deviceParentData.unmarshal(),
+
+    const device = await this._deviceRepository.create(
+      deviceData.unmarshal(),
       t ? { t } : {}
     );
     return {
-      ...deviceParent.unmarshal(),
+      ...device.unmarshal(),
     };
   }
 
-  public async findAll(param: TStandardPaginationOption): Promise<[IDeviceParent[], Pagination?]> {
+  public async findAll(param: TStandardPaginationOption): Promise<[IDevice[], Pagination?]> {
     return await this.cacheInstance.findOrCreate({
       payload: JSON.stringify(param),
       eventName: this.findAll.name,
@@ -45,14 +48,14 @@ export class DeviceParentService {
             page: param.page,
             limit: param.limit,
           });
-          const [data, paginationResult] = await this._deviceParentRepository.findAllWithPagination(param, pagination, {});
+          const [data, paginationResult] = await this._deviceRepository.findAllWithPagination(param, pagination, {});
           return [
             data.map((el) => ({ ...el.unmarshal(), password: undefined })), paginationResult
           ];
         }
-        const deviceParents = await this._deviceParentRepository.findAll({});
+        const devices = await this._deviceRepository.findAll({});
         return [
-          deviceParents.map((deviceParent) => ({ ...deviceParent.unmarshal() })),
+          devices.map((device) => ({ ...device.unmarshal() })),
         ];
       }
     });
@@ -60,46 +63,58 @@ export class DeviceParentService {
 
   public async update(
     id: string,
-    _deviceParent: IDeviceParent,
+    _device: IDevice,
     t?: Transaction
-  ): Promise<IDeviceParent> {
-    const oldDeviceParentData = await this._deviceParentRepository.findById(id, t ? { t } : {});
-    if (!oldDeviceParentData) {
+  ): Promise<IDevice> {
+    const oldDeviceData = await this._deviceRepository.findById(id, t ? { t } : {});
+    if (!oldDeviceData) {
       throw new AppError({
         statusCode: HttpCode.NOT_FOUND,
         description: "Device parent id doesn't exist"
       });
     }
-    const deviceParentProps = DeviceParent.create({
-      ..._deviceParent,
+    const deviceProps = Device.create({
+      ..._device,
       id
     });
-    const deviceParent = await this._deviceParentRepository.update(
+    const device = await this._deviceRepository.update(
       id,
-      deviceParentProps.unmarshal(),
+      deviceProps.unmarshal(),
       t ? { t } : {}
     );
 
     return {
-      ...deviceParent.unmarshal()
+      ...device.unmarshal()
     };
   }
 
   public async destroy(id: string): Promise<boolean> {
     return await this._serviceTransaction.runOnSingleTransaction(
       async(t: Transaction) => {
-        const deviceParentData = await this._deviceParentRepository.findById(id, t? { t }: {});
+        const deviceData = await this._deviceRepository.findById(id, t? { t }: {});
 
-        if(!deviceParentData) {
+        if(!deviceData) {
           throw new AppError({
             statusCode: HttpCode.NOT_FOUND,
             description: "Device parent id not found"
           });
         }
-        await this._deviceParentRepository.delete(id, t? {t}: {});
+        await this._deviceRepository.delete(id, t? {t}: {});
         return true;
       },
       "Failed to destroy device parent"
     );
+  }
+
+  public async findById(id: string, t?: Transaction): Promise<IDevice> {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    let option: {} | {t: Transaction} = {};
+    if(t) {
+      option = {t};
+    }
+    const device = await this._deviceRepository.findById(id, option);
+    return {
+      ...device.unmarshal(),
+    };
   }
 }

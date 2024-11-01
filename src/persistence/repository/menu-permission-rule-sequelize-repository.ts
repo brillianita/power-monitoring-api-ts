@@ -12,9 +12,7 @@ import { ENABLED_MENU_PERMISSION_RULE, TMenuList } from "@/const";
 import { BaseQueryOption } from "@/domain/service/types";
 
 @injectable()
-export class MenuPermissionRuleSequelizeRepository
-  implements MenuPermissionRuleRepository
-{
+export class MenuPermissionRuleSequelizeRepository implements MenuPermissionRuleRepository {
   async getByMenuAndPermission(
     props: IMenuPermissionPlain
   ): Promise<MenuPermissionRule> {
@@ -62,7 +60,7 @@ export class MenuPermissionRuleSequelizeRepository
     return true;
   }
 
-  async getRules(): Promise<void> {}
+  async getRules(): Promise<void> { }
 
   async seed(option: Partial<BaseQueryOption>): Promise<void> {
     const permissions = await PermissionPersistence.findAll({

@@ -6,7 +6,7 @@ import { PermissionRoutes } from "@/presentation/routes/web-admin/permission-rou
 import { MenuRoutes } from "@/presentation/routes/web-admin/menu-routes";
 import { RoleRoutes } from "@/presentation/routes/web-admin/role-routes";
 import { SeederRoutes } from "@/presentation/routes/web-admin/seeder-routes";
-import { DeviceParentRoutes } from "./power-monitoring/device-parent-route";
+import { DeviceRoutes } from "./power-monitoring/device-route";
 
 @injectable()
 export class Routes {
@@ -17,7 +17,7 @@ export class Routes {
     private menuRoutes: MenuRoutes,
     private roleRoutes: RoleRoutes,
     private seederRoutes: SeederRoutes,
-    private deviceParentRoutes: DeviceParentRoutes
+    private DeviceRoutes: DeviceRoutes
   ) {}
 
   public setRoutes(router: Router) {
@@ -27,6 +27,6 @@ export class Routes {
     this.menuRoutes.setRoutes(router);
     this.roleRoutes.setRoutes(router);
     this.seederRoutes.setRoutes(router);
-    this.deviceParentRoutes.setRoutes(router);
+    this.DeviceRoutes.setRoutes(router);
   }
 }

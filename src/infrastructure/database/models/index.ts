@@ -5,7 +5,6 @@ import { Menu } from "@/infrastructure/database/models/menu-sequelize";
 import { Role } from "@/infrastructure/database/models/role-sequelize";
 import { MenuPermissionRule } from "@/infrastructure/database/models/menu-permission-rule-sequelize";
 import { RoleAccess } from "@/infrastructure/database/models/role-access-sequelize";
-import { DeviceParent } from "./power-monitoring/device-parent-sequelize";
 import { Device } from "./power-monitoring/device-sequelize";
 import { Limitation } from "./power-monitoring/limitation-sequelize";
 import { LogAlerts } from "./power-monitoring/log-alerts-sequelize";
@@ -25,7 +24,6 @@ import { PowerConsumption } from "./power-monitoring/power-consumption-sequelize
   await RoleAccess.sync({ alter: true });
 
   // Power Monitoring
-  await DeviceParent.sync({ alter: true });
   await Device.sync({ alter: true });
   await Limitation.sync({ alter: true });
   await LogAlerts.sync({ alter: true });
@@ -59,16 +57,6 @@ User.belongsTo(Role, {
 
 // Apps Model Assosiation
 // Power Monitoring
-// DeviceParent to Device (One-to-Many)
-DeviceParent.hasMany(Device, {
-  foreignKey: "parentId",
-  as: "devices"
-});
-
-Device.belongsTo(DeviceParent, {
-  foreignKey: "parentId",
-  as: "parent"
-});
 
 // Device to ParameterKwh (One-to-Many)
 Device.hasMany(ParameterKwh, {
@@ -130,7 +118,6 @@ export {
   Role, 
   MenuPermissionRule, 
   RoleAccess, 
-  DeviceParent, 
   Device,
   ParameterCost,
   ParameterKwh,

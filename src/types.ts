@@ -16,7 +16,7 @@ const TYPES = {
   RoleAccessRepository: Symbol.for("RoleAccessRepository"),
 
   // Power Monitoring Management Domain Service
-  DeviceParentRepository: Symbol.for("DeviceParentRepository"),
+  DeviceRepository: Symbol.for("DeviceRepository"),
 
   // Service Layer
   // User Management Service
@@ -27,7 +27,7 @@ const TYPES = {
   RoleService: Symbol.for("RoleService"),
 
   // Power Monitoring Management Service 
-  DeviceParentService: Symbol.for("DeviceParentService"),
+  DeviceService: Symbol.for("DeviceService"),
 
   ManagedTransactionService: Symbol.for("ManagedTransactionService"),
   SeederService: Symbol.for("SeederService"),

@@ -1,6 +1,6 @@
 import { Entity, IBaseDomainProperty } from "../entity";
 
-export interface ILogAlerts extends IBaseDomainProperty {
+export interface ILogAlert extends IBaseDomainProperty {
   deviceId: string;
   location: string;
   category: string;
@@ -8,21 +8,25 @@ export interface ILogAlerts extends IBaseDomainProperty {
   alertLog: string;
 }
 
-export class LogAlerts extends Entity<ILogAlerts> {
-  private constructor(props: ILogAlerts) {
+export class LogAlert extends Entity<ILogAlert> {
+  private constructor(props: ILogAlert) {
     const {id, ...data} = props;
     super(data, id);
   }
 
-  public create(props: ILogAlerts): LogAlerts {
-    return new LogAlerts(props);
+  public create(props: ILogAlert): LogAlert {
+    return new LogAlert(props);
   }
 
-  public unmarshal(): ILogAlerts {
+  public unmarshal(): ILogAlert {
     return {
       ...this.props,
       id: this._id
     };
+  }
+
+  get id(): string {
+    return this._id;
   }
 
   get deviceId(): string {

@@ -142,7 +142,7 @@ ParameterKwh.init({
   deletedAt: DataTypes.DATE,
 }, {
   sequelize,
-  tableName: "parameter_kwh",
+  tableName: "parameter_kwhs",
   modelName: "parameterKwh",
   underscored: true,
   paranoid: true,

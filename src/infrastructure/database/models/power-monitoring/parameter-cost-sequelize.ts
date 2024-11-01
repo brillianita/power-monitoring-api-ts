@@ -142,7 +142,7 @@ ParameterCost.init({
   deletedAt: DataTypes.DATE,
 }, {
   sequelize,
-  tableName: "parameter_cost",
+  tableName: "parameter_costs",
   modelName: "parameterCost",
   underscored: true,
   paranoid: true,

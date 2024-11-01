@@ -1,16 +1,15 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../sequelize";
-import { IDevice } from "@/domain/models/power-monitoring/device";
-import { DeviceParent } from "./device-parent-sequelize";
+import { EStatus, IDevice } from "@/domain/models/power-monitoring/device";
 
 export class Device extends Model<InferAttributes<Device>, InferCreationAttributes<Device>> implements IDevice {
   declare id: CreationOptional<string>;
-  declare parentId: string;
+  declare location: string;
   declare name: string;
   declare macAddress: string;
-  declare status: string;
-  declare maxAmpere: number;
-  declare stdAmpere: number;
+  declare status: string | EStatus;
+  declare maxAmpere: number | undefined;
+  declare stdAmpere: number | undefined;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare deletedAt: CreationOptional<Date> | null;
@@ -22,28 +21,30 @@ Device.init(
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    parentId: {
-      type: DataTypes.UUID,
+    location: {
+      type: DataTypes.STRING,
       allowNull: false,
-      references: {
-        model: DeviceParent
-      }
     },
     name: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     macAddress: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     status: {
-      type: DataTypes.STRING,
-      defaultValue: true
+      type: DataTypes.STRING, 
+      allowNull: false,
+      defaultValue: "inactive",
     },
     maxAmpere: {
       type: DataTypes.FLOAT,
+      allowNull: true
     },
     stdAmpere: {
       type: DataTypes.FLOAT,
+      allowNull: true
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -56,7 +57,7 @@ Device.init(
     deletedAt: DataTypes.DATE,
   }, {
     sequelize,
-    tableName: "device",
+    tableName: "devices",
     modelName: "device",
     underscored: true,
     paranoid: true,
