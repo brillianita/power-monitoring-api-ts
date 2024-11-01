@@ -19,6 +19,11 @@ export class DeviceParentRoutes {
       `${this.route}`,
       asyncWrap(this.controller.getAll.bind(this.controller))
     );
+
+    router.put(
+      `${this.route}/:id`,
+      asyncWrap(this.controller.update.bind(this.controller))
+    );
   }
 
 }

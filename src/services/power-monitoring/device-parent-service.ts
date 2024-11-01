@@ -4,11 +4,11 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "@/types";
 import { TStandardPaginationOption } from "@/domain/service/types";
 import { DeviceParent, IDeviceParent } from "@/domain/models/power-monitoring/device-parents";
-// import { Pagination } from "@/domain/models/pagination";
 import { CacheHandler } from "@/libs/cache-handler";
 import { container } from "@/container";
 import { Transaction } from "sequelize";
 import { Pagination } from "@/domain/models/pagination";
+import { AppError, HttpCode } from "@/libs/exceptions/app-error";
 
 @injectable()
 export class DeviceParentService {
@@ -56,5 +56,32 @@ export class DeviceParentService {
         ];
       }
     });
+  }
+
+  public async update(
+    id: string,
+    _deviceParent: IDeviceParent,
+    t?: Transaction
+  ): Promise<IDeviceParent> {
+    const oldDeviceParentData = await this._deviceParentRepository.findById(id, t ? { t } : {});
+    if (!oldDeviceParentData) {
+      throw new AppError({
+        statusCode: HttpCode.NOT_FOUND,
+        description: "Device parent id doesn't exist"
+      });
+    }
+    const deviceParentProps = DeviceParent.create({
+      ..._deviceParent,
+      id
+    });
+    const deviceParent = await this._deviceParentRepository.update(
+      id,
+      deviceParentProps.unmarshal(),
+      t ? { t } : {}
+    );
+
+    return {
+      ...deviceParent.unmarshal()
+    };
   }
 }

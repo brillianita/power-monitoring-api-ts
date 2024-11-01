@@ -5,7 +5,7 @@ import { inject, injectable } from "inversify";
 import { Request, Response } from "express";
 import { AppError, HttpCode } from "@/libs/exceptions/app-error";
 import { StandardResponse } from "@/libs/standard-response";
-import { deviceParentCreateScheme } from "@/presentation/validation/power-monitoring/device-parent-validation";
+import { deviceParentCreateScheme, deviceParentUpdate } from "@/presentation/validation/power-monitoring/device-parent-validation";
 
 @injectable()
 export default class DeviceParentController {
@@ -51,6 +51,32 @@ export default class DeviceParentController {
         status: HttpCode.OK,
       })
       .withPagination(pagination)
+      .send();
+  }
+  public async update(req: Request, res: Response): Promise<Response> {
+
+    console.log("reqbody", req.body);
+    const validatedReq = deviceParentUpdate.safeParse({
+      ...req.params,
+      ...req.body
+    });
+    if(!validatedReq.success) {
+      throw new AppError({
+        statusCode: HttpCode.VALIDATION_ERROR,
+        description: "Request validation error",
+        data: validatedReq.error.flatten().fieldErrors,
+      });
+    }
+
+    const updated = await this._deviceParentService.update(validatedReq.data.id, {
+      ...validatedReq.data
+    });
+    return StandardResponse.create(res)
+      .setResponse({
+        message: "Success updating device parent",
+        data: updated,
+        status: HttpCode.OK
+      })
       .send();
   }
 }

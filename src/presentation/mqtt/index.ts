@@ -34,7 +34,7 @@ export class Mqtt {
   public async handleMessage(_topic: string, message: Buffer) {
     try {
       const data = JSON.parse(message.toString());
-      console.log("Received data:", data.data);
+      // console.log("Received data:", data.data);
 
       const point = new Point("logDetails")
         .timestamp(new Date())
@@ -51,7 +51,7 @@ export class Mqtt {
       await writeApi.writePoint(point);
 
       
-      console.log("Data successfully written to InfluxDB");
+      // console.log("Data successfully written to InfluxDB");
 
 
     } catch (error) {
