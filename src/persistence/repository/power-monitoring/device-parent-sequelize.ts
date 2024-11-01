@@ -16,7 +16,7 @@ export class DeviceParentSequelizeRepository implements DeviceParentRepository {
     return DeviceParent.create(data.toJSON());
   }
 
-  async delete(id: string, option: Partial<BaseQueryOption>): Promise<boolean> {
+  async delete(id: string,option: Partial<BaseQueryOption>): Promise<boolean> {
     const data = await DeviceParentPersistence.findByPk(id, { transaction: option.t });
 
     if (!data) {
@@ -47,7 +47,7 @@ export class DeviceParentSequelizeRepository implements DeviceParentRepository {
     const order: Order = [];
     switch (orderBy) {
     case "name":
-      order.push([{ model: DeviceParentPersistence, as: "role" }, "name", sortBy!]);
+      order.push(["name", sortBy!]);
       break;
     default:
       if (orderBy) order.push([orderBy, sortBy!]);
@@ -88,12 +88,16 @@ export class DeviceParentSequelizeRepository implements DeviceParentRepository {
     return DeviceParent.create(data.toJSON());
   }
 
-  async update(id: string, props: IDeviceParent, option: Partial<BaseQueryOption>): Promise<DeviceParent> {
+  async update(
+    id: string,
+    props: IDeviceParent,
+    option: Partial<BaseQueryOption>
+  ): Promise<DeviceParent> {
     const data = await DeviceParentPersistence.findByPk(id, { transaction: option.t });
     if (!data) {
       throw new AppError({
         statusCode: HttpCode.NOT_FOUND,
-        description: "User not found!"
+        description: "Device not found!"
       });
     }
     await data.update(props, { transaction: option.t });
