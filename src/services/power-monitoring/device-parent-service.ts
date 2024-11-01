@@ -1,6 +1,6 @@
 import { DeviceParentRepository } from "@/domain/service/power-monitoring/device-parent";
 import { inject, injectable } from "inversify";
-// import ManagedTransactionService from "../managed-transaction-service";
+import ManagedTransactionService from "../managed-transaction-service";
 import { TYPES } from "@/types";
 import { TStandardPaginationOption } from "@/domain/service/types";
 import { DeviceParent, IDeviceParent } from "@/domain/models/power-monitoring/device-parents";
@@ -15,8 +15,8 @@ export class DeviceParentService {
   private cacheInstance = container.get<CacheHandler>(CacheHandler);
   constructor(
     @inject(TYPES.DeviceParentRepository) private _deviceParentRepository: DeviceParentRepository,
-    // @inject(TYPES.ManagedTransactionService)
-    // private _serviceTransaction: ManagedTransactionService
+    @inject(TYPES.ManagedTransactionService)
+    private _serviceTransaction: ManagedTransactionService
   ) { }
 
   public async store(_deviceParent: IDeviceParent, t?: Transaction): Promise<IDeviceParent> {
@@ -83,5 +83,23 @@ export class DeviceParentService {
     return {
       ...deviceParent.unmarshal()
     };
+  }
+
+  public async destroy(id: string): Promise<boolean> {
+    return await this._serviceTransaction.runOnSingleTransaction(
+      async(t: Transaction) => {
+        const deviceParentData = await this._deviceParentRepository.findById(id, t? { t }: {});
+
+        if(!deviceParentData) {
+          throw new AppError({
+            statusCode: HttpCode.NOT_FOUND,
+            description: "Device parent id not found"
+          });
+        }
+        await this._deviceParentRepository.delete(id, t? {t}: {});
+        return true;
+      },
+      "Failed to destroy device parent"
+    );
   }
 }

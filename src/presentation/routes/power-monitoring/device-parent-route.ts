@@ -24,6 +24,10 @@ export class DeviceParentRoutes {
       `${this.route}/:id`,
       asyncWrap(this.controller.update.bind(this.controller))
     );
+    router.delete(
+      `${this.route}/:id`,
+      asyncWrap(this.controller.destroy.bind(this.controller))
+    );
   }
 
 }

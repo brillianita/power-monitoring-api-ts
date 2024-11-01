@@ -6,6 +6,7 @@ import { Request, Response } from "express";
 import { AppError, HttpCode } from "@/libs/exceptions/app-error";
 import { StandardResponse } from "@/libs/standard-response";
 import { deviceParentCreateScheme, deviceParentUpdate } from "@/presentation/validation/power-monitoring/device-parent-validation";
+import { soleUuidValidation } from "@/presentation/validation/web-admin/sole-uuid-validation";
 
 @injectable()
 export default class DeviceParentController {
@@ -36,14 +37,14 @@ export default class DeviceParentController {
 
   public async getAll(req: Request, res: Response): Promise<Response> {
     const validatedPagination = queryOptionValidation.safeParse(req.query);
-    if(!validatedPagination.success) {
+    if (!validatedPagination.success) {
       throw new AppError({
         statusCode: HttpCode.VALIDATION_ERROR,
         description: "Request validation error",
         data: validatedPagination.error.flatten().fieldErrors,
       });
     }
-    const [deviceParents, pagination] = await this._deviceParentService.findAll( validatedPagination.data );
+    const [deviceParents, pagination] = await this._deviceParentService.findAll(validatedPagination.data);
     return StandardResponse.create(res)
       .setResponse({
         message: "Device Parents fetched",
@@ -60,7 +61,7 @@ export default class DeviceParentController {
       ...req.params,
       ...req.body
     });
-    if(!validatedReq.success) {
+    if (!validatedReq.success) {
       throw new AppError({
         statusCode: HttpCode.VALIDATION_ERROR,
         description: "Request validation error",
@@ -76,6 +77,25 @@ export default class DeviceParentController {
         message: "Success updating device parent",
         data: updated,
         status: HttpCode.OK
+      })
+      .send();
+  }
+
+  public async destroy(req: Request, res: Response): Promise<Response> {
+    const validatedReq = soleUuidValidation.safeParse(req.params);
+    if (!validatedReq.success) {
+      throw new AppError({
+        statusCode: HttpCode.VALIDATION_ERROR,
+        description: "Request validation error",
+        data: validatedReq.error.flatten().fieldErrors,
+      });
+    }
+
+    await this._deviceParentService.destroy(validatedReq.data.id);
+    return StandardResponse.create(res)
+      .setResponse({
+        message: "Device parent has beeen deleted",
+        status: HttpCode.OK,
       })
       .send();
   }
